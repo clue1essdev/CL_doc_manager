@@ -13,6 +13,9 @@ class States {
   defaultPath: string = "CaseLabDocuments";
   currentPath: string = "CaseLabDocuments";
 
+  allFoldersPaths: string[] = [];
+  allFoldersMeta: Item[] = [];
+  currentFolderIndex: number = -1;
   folderMeta: FolderMetaInterface | ErrorObject = {
     message: "bad",
     description: "",
@@ -35,6 +38,8 @@ class States {
   showCategories: boolean = false;
   showAllFiles: boolean = false;
   rootFolder : boolean = true;
+
+  pending : boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -65,6 +70,9 @@ class States {
   toggleRootFolder = () => {
     this.rootFolder = !this.rootFolder;
   }
+  togglePending = () => {
+    this.pending = !this.pending;
+  }
 
   
   // setters
@@ -88,30 +96,70 @@ class States {
       this.categoriesMeta = obj._embedded.items;
     }
   };
+  setAllFoldersPaths = (paths : string[]) => {
+    this.allFoldersPaths = paths;
+  };
+  setAllFoldersMeta = (arr: Item[]) => {
+    this.allFoldersMeta = structuredClone(arr);
+  }
   setCurrentPath = (path: string) => {
-    if (path === "") {
-      this.currentPath = this.defaultPath;
-      return;
-    }
     this.currentPath = path;
   };
+  setCurrentFolderIndex = () => {
+    console.log(this.allFoldersMeta.findIndex(folder => folder.path === `disk:/${this.currentPath}`));
+    this.allFoldersMeta.findIndex(folder => folder.path === `disk:/${this.currentPath}`);
+    console.log(this.allFoldersMeta[this.currentFolderIndex])
+  }
 
   //async
+  fetchJson = async (path : string) => {
+    const res = await fetch(path, {
+      method: "GET",
+      headers: {
+        Authorization: this.token,
+      },
+    });
+    if (!res.ok) {
+      console.log("some error during fetch");
+      return;
+    }
+    const obj = await res.json();
+    return obj;
+  }
+
+  fetchAllFoldersData = async (collection : string[]) => {
+    this.togglePending();
+    const allData = await Promise.all(collection.map(url => this.fetchJson(url)));
+    this.setAllFoldersMeta(allData);
+    this.togglePending();
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   fetchFolderData = async (path: string) => {
-    let currentPath: string = "";
-    if (path === "") {
-      currentPath = this.defaultUrl + this.defaultPath;
-    }
-    if (path === "up") {
-      currentPath = this.defaultUrl + this.currentPath;
-    }
-    const result = await fetch(currentPath, {
+    const result = await fetch(this.defaultUrl + this.currentPath, {
       method: "GET",
       headers: {
         Authorization: this.token,
       },
     });
     const objRes = await result.json();
+    
+    const paths : string[] = [];
+    for (const item of objRes._embedded.items) {
+      if (item.type === "dir") {
+        paths.push(this.defaultUrl + item.path.replace("disk:/", ""))
+      }
+    }
+    this.setAllFoldersPaths(paths);
+    this.fetchAllFoldersData(this.allFoldersPaths);
     if ("message" in objRes) {
       if ("description" in objRes) {
         if (objRes.description === "Resource not found.") {

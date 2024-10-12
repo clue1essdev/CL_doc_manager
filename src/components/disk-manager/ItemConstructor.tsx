@@ -1,16 +1,22 @@
-import { createItemName } from "./create-item-name";
-import type { Item } from "../../../stores/types";
-import type { Size } from "../../../stores/types";
-import states from "../../../stores/states";
+import { createItemName } from "./helpers/create-item-name";
+import type { Size } from "../../stores/types";
+import states from "../../stores/states";
+import { observer } from "mobx-react-lite";
 
-export function constructItem(type: string, item: Item) {
-  const { toggleModalShowing, setCurrentImgName, setCurrentImgUrl, fetchFolderData, setCurrentPath, toggleRootFolder } = states;
+const ItemConstructor = observer (({ type, item }) => {
+  const {
+    toggleModalShowing,
+    setCurrentImgName,
+    setCurrentImgUrl,
+    setCurrentPath,
+    toggleRootFolder,
+  } = states;
   if (type === "dir") {
     return (
-      <div className="item clickable"
+      <div
+        className="item clickable"
         onDoubleClick={() => {
           setCurrentPath(item.path.replace("disk:/", ""));
-          fetchFolderData("up");
           toggleRootFolder();
         }}
       >
@@ -71,4 +77,7 @@ export function constructItem(type: string, item: Item) {
       </>
     );
   }
-}
+});
+
+
+export default ItemConstructor

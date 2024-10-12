@@ -10,6 +10,7 @@ const InputForm = observer(() => {
     setToken,
     toggleManageDisk,
     authorized,
+    pending
   } = states;
   const inputRef = useRef();
   const handleSubmit = (e: Event) => {
@@ -36,7 +37,7 @@ const InputForm = observer(() => {
         </div>
       </form>
     );
-  } else {
+  } else if (!pending) {
     return (
       <button
         className="go-to-disk-btn"
@@ -48,6 +49,12 @@ const InputForm = observer(() => {
         Go to disk
       </button>
     );
+  } else {
+    return (
+      <>
+        <p>Wait, pending data...</p>
+      </>
+    )
   }
 });
 
