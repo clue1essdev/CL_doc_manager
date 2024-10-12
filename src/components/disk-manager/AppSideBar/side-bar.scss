@@ -1,5 +1,6 @@
 $font-clr: #faf8ff;
 $border-clr: #aca9bb;
+$root-folder-bg-clr: #56555a;
 
 .categories-header {
   height: 1.5rem;
@@ -19,6 +20,15 @@ $border-clr: #aca9bb;
   grid-template-columns: 1fr 9fr;
   margin: 0.4rem 0.5rem 0.4rem;
   align-items: center;
+  padding-left: .5rem;
+  border-radius: .2rem; 
+}
+
+.root {
+  background-color: $root-folder-bg-clr;
+  &:hover {
+    background-color: #6e6d70;
+  }
 }
 
 .show-btn {
@@ -32,7 +42,7 @@ $border-clr: #aca9bb;
   align-items: center;
   position: relative;
   &:hover {
-    background-color: #aca9bb;
+    background-color: #6e6d70;
   }
   .show-btn-img {
     width: 60%;
@@ -46,15 +56,18 @@ $border-clr: #aca9bb;
 }
 
 .folder-name {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   color: $font-clr;
   margin-left: 0.2rem;
 }
 
 .file {
   display: flex;
-  align-items: flex-start;
+  justify-content: flex-start;
   margin: 0.6rem;
+  min-height: 2.3rem;
+  padding: 0.5rem;
+  border-radius: .3rem;
 }
 
 .file-preview {

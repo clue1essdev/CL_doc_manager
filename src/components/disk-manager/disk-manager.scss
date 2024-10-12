@@ -27,7 +27,7 @@ $border-clr: #aca9bb;
 
 .modal {
   position: absolute;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   z-index: 1;
   background-color: #000000;
@@ -89,9 +89,6 @@ $border-clr: #aca9bb;
   height: 35px;
   width: 35px;
   border-radius: 50%;
-  &:hover {
-    background-color: #aca9bb;
-  }
   @include flex-center();
   margin-right: 20px;
 }
@@ -132,7 +129,7 @@ $border-clr: #aca9bb;
 
 .clickable {
   &:hover {
-    background-color: #aca9bb;
+    background-color: #6e6d70;
   }
 }
 

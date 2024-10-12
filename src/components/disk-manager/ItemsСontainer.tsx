@@ -10,21 +10,21 @@ const ItemsContainer = observer(() => {
   useEffect(() => {
     if (rootFolder) setCurrentPath("CaseLabDocuments");
   }, [rootFolder, setCurrentPath]
-  )
+  );
+  const backBtn = rootFolder? (<></>) 
+  : (<div className="back-btn clickable"
+      onClick={() => {
+        toggleRootFolder();
+      }}
+      >
+      <img src="./left-arrow-svgrepo-com.svg" alt="back-btn" className="back-btn-img"></img>
+    </div>)
   if ("_embedded" in folderMeta) {
     return (
       <>
         <div className="items">
           <div className="path">
-              <div className="back-btn"
-                onClick={() => {
-                if (!rootFolder) {
-                  toggleRootFolder();
-                }
-              }}
-              >
-                <img src="./left-arrow-svgrepo-com.svg" alt="back-btn" className="back-btn-img"></img>
-              </div>
+              {backBtn}
               <h1 className="path-name">{currentPath.split("/").join(" / ")}</h1>
             </div>
             <div className="items-container">
