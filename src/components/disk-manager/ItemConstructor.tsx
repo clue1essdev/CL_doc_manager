@@ -10,6 +10,13 @@ const ItemConstructor = observer (({ type, item }) => {
     setCurrentImgUrl,
     setCurrentPath,
     toggleRootFolder,
+    togglePopupShowing,
+    setPopupX,
+    setPopupY,
+    setCurrentFile,
+    popupShowing,
+    currentFile
+    
   } = states;
   if (type === "dir") {
     return (
@@ -47,6 +54,28 @@ const ItemConstructor = observer (({ type, item }) => {
             setCurrentImgUrl(urlOrigin);
             toggleModalShowing();
           }}
+          onContextMenu={(event : Event) => {
+            event.preventDefault();
+            setCurrentFile(item.name);
+            if (window.innerWidth - 180 < event.clientX) {
+              setPopupX(event.clientX - 180);
+            } else {
+              setPopupX(event.clientX);
+            }
+            if (window.innerHeight - 100 < event.clientY) {
+              setPopupY(event.clientY - 100);
+            } else {
+              setPopupY(event.clientY);
+            }
+            if (popupShowing) {
+              togglePopupShowing();
+              togglePopupShowing();
+            } else {
+              togglePopupShowing();
+            }
+
+          }
+          }
         >
           <div
             className="img-container"

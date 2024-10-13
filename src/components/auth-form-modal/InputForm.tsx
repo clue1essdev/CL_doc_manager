@@ -52,7 +52,7 @@ const InputForm = observer(() => {
   } else {
     return (
       <>
-        <p>Wait, pending data...</p>
+        <p className="pending-msg">Wait, pending...</p>
       </>
     )
   }

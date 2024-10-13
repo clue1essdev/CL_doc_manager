@@ -8,14 +8,20 @@ interface Items {
 }
 
 class States {
+  
+  // hardcoded path values
   filesPathUrl: string = "https://cloud-api.yandex.net/v1/disk/resources/files";
   defaultUrl: string = "https://cloud-api.yandex.net/v1/disk/resources?path=";
   defaultPath: string = "CaseLabDocuments";
+
+  // dynamic path value
   currentPath: string = "CaseLabDocuments";
 
+
+  // files/paths
   allFoldersPaths: string[] = [];
   allFoldersMeta: Item[] = [];
-  currentFolderIndex: number = -1;
+
   folderMeta: FolderMetaInterface | ErrorObject = {
     message: "bad",
     description: "",
@@ -27,13 +33,26 @@ class States {
   };
   currentImgUrl: string = "";
   currentImgName: string = "";
-
   token: string = "";
+
+  currentFile: string = "";
+
+
+  // popup coordinates
+  popupX : number = 0;
+  popupY: number = 0;
+
+  // flags
   authorized: boolean = false;
   noSuchFolder: boolean = false;
   authorisationFailed: boolean = false;
   manageDisk: boolean = false;
   modalShowing: boolean = false;
+
+
+  popupShowing: boolean = false;
+  moveOptionSelected: boolean = false;
+
 
   showCategories: boolean = false;
   showAllFiles: boolean = false;
@@ -73,8 +92,16 @@ class States {
   togglePending = () => {
     this.pending = !this.pending;
   }
+  togglePopupShowing = () => {
+    this.popupShowing = !this.popupShowing;
+  }
+  toggleMoveOptionSelected = () => {
+    this.moveOptionSelected = !this.moveOptionSelected;
+  }
 
   
+
+
   // setters
   setCurrentImgName = (name: string) => {
     this.currentImgName = name;
@@ -105,11 +132,20 @@ class States {
   setCurrentPath = (path: string) => {
     this.currentPath = path;
   };
-  setCurrentFolderIndex = () => {
-    console.log(this.allFoldersMeta.findIndex(folder => folder.path === `disk:/${this.currentPath}`));
-    this.allFoldersMeta.findIndex(folder => folder.path === `disk:/${this.currentPath}`);
-    console.log(this.allFoldersMeta[this.currentFolderIndex])
+
+
+  setCurrentFile = (fileName : string) => {
+    this.currentFile = fileName;
   }
+  setPopupX = (x : number) => {
+    this.popupX = x;
+  }
+
+  setPopupY = (y : number) => {
+    this.popupY =y;
+  }
+
+
 
   //async
   fetchJson = async (path : string) => {

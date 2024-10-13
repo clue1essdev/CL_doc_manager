@@ -174,3 +174,52 @@ $border-clr: #aca9bb;
 
   word-break: break-all;
 }
+
+.popup {
+  width: 180px;
+  height: 100px;
+  background-color: $border-clr;
+  border-radius: .5rem;
+  @include flex-center();
+  position: absolute;
+}
+
+.popup-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup-button {
+  width: 90%;
+  height: 30px;
+  border-radius: .2rem;
+  padding: 2px;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  margin: 5px;
+}
+
+.move-delete-btn-img {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.btn-name {
+  font-size: .9rem;
+}
+
+// <div className="popup">
+//                 <div className="popup-buttons">
+//                     <div className="move-btn clickable popup-button">
+//                         <img className="move-delete-btn-img" src="move-to-folder-svgrepo-com.svg"></img>
+//                         <p className="btn-name">Move</p>
+//                     </div>
+//                     <div className="delete-btn clickable popup-button">
+//                         <img className="delete-btn-img" src="delete-2-svgrepo-com.svg"></img>
+//                         <p className="delete-btn-name">Delete</p>
+//                     </div>
+//                 </div>
+//             </div>
