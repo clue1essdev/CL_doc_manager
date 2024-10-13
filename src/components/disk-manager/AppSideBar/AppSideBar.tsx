@@ -34,7 +34,7 @@ const AppSideBar = observer(() => {
         </section>
         <section className="all-files">
           <div className="categories-header">
-            <h1 className="title">All files</h1>
+            <h1 className="title">All documents</h1>
             <button className="show-btn" onClick={toggleshowAllFiles}>
               <img
                 className="show-btn-img"
