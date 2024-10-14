@@ -42,7 +42,7 @@ const ItemConstructor = observer((props : Props) => {
       let url: string = "";
       let urlOrigin: string = "";
       const indexS: number = item.sizes
-        ? item.sizes.findIndex((el: Size) => el.name === "S")
+        ? item.sizes.findIndex((el: Size) => el.name === "ORIGINAL")
         : -1;
       if (indexS !== -1) url = item.sizes ? item.sizes[indexS].url : "";
       const indexOrigin: number = item.sizes
