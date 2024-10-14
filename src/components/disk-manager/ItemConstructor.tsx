@@ -3,7 +3,7 @@ import type { Size } from "../../stores/types";
 import states from "../../stores/states";
 import { observer } from "mobx-react-lite";
 
-const ItemConstructor = observer (({ type, item }) => {
+const ItemConstructor = observer(({ type, item }) => {
   const {
     toggleModalShowing,
     setCurrentImgName,
@@ -15,8 +15,7 @@ const ItemConstructor = observer (({ type, item }) => {
     setPopupY,
     setCurrentFile,
     popupShowing,
-    currentFile
-    
+    currentFile,
   } = states;
   if (type === "dir") {
     return (
@@ -54,16 +53,16 @@ const ItemConstructor = observer (({ type, item }) => {
             setCurrentImgUrl(urlOrigin);
             toggleModalShowing();
           }}
-          onContextMenu={(event : Event) => {
+          onContextMenu={(event: Event) => {
             event.preventDefault();
             setCurrentFile(item.name);
-            if (window.innerWidth - 180 < event.clientX) {
-              setPopupX(event.clientX - 180);
+            if (window.innerWidth - 220 < event.clientX) {
+              setPopupX(event.clientX - 220);
             } else {
               setPopupX(event.clientX);
             }
-            if (window.innerHeight - 100 < event.clientY) {
-              setPopupY(event.clientY - 100);
+            if (window.innerHeight - 250 < event.clientY) {
+              setPopupY(event.clientY - 250);
             } else {
               setPopupY(event.clientY);
             }
@@ -73,9 +72,7 @@ const ItemConstructor = observer (({ type, item }) => {
             } else {
               togglePopupShowing();
             }
-
-          }
-          }
+          }}
         >
           <div
             className="img-container"
@@ -108,5 +105,4 @@ const ItemConstructor = observer (({ type, item }) => {
   }
 });
 
-
-export default ItemConstructor
+export default ItemConstructor;

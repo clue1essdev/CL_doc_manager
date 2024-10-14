@@ -5,8 +5,9 @@ import { useEffect } from "react";
 import Items from "./Items";
 
 
+
 const ItemsContainer = observer(() => {
-  const { folderMeta, setCurrentPath, currentPath, toggleRootFolder, rootFolder } = states;
+  const { folderMeta, setCurrentPath, currentPath, toggleRootFolder, rootFolder, popupShowing, togglePopupShowing, updatingInterface } = states;
   useEffect(() => {
     if (rootFolder) setCurrentPath("CaseLabDocuments");
   }, [rootFolder, setCurrentPath]
@@ -14,6 +15,7 @@ const ItemsContainer = observer(() => {
   const backBtn = rootFolder? (<></>) 
   : (<div className="back-btn clickable"
       onClick={() => {
+        console.log("clicked back btn")
         toggleRootFolder();
       }}
       >
@@ -23,6 +25,11 @@ const ItemsContainer = observer(() => {
     return (
       <>
         <div className="items">
+          <div className="area-to-click" onClick={() => {
+            if (popupShowing) {
+              togglePopupShowing();
+            }
+          }}></div>
           <div className="path">
               {backBtn}
               <h1 className="path-name">{currentPath.split("/").join(" / ")}</h1>

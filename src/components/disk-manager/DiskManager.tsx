@@ -6,24 +6,20 @@ import { observer } from "mobx-react-lite";
 import "./disk-manager.scss";
 import states from "../../stores/states";
 import Popup from "./Popup";
+import PendingMessage from "./PendingMessage";
 const DiskManager = observer(() => {
-  const {modalShowing, popupShowing, togglePopupShowing } = states;
+  const {modalShowing } = states;
   if (modalShowing) {
-    return <Modal />;
-  } else {
+    return <Modal />; }
+  else {
     return (
       <>
-        <div className="manager-page" 
-          onClick={() => {
-            if (popupShowing) {
-              togglePopupShowing();
-            }
-          }}
-        >
+        <div className="manager-page">
           <AppHeader />
           <AppSideBar />
           <ItemsContainer />
           <Popup />
+          <PendingMessage />
         </div>
       </>
     );

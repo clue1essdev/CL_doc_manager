@@ -2,6 +2,8 @@ import "./auth.scss";
 import { observer } from "mobx-react-lite";
 import AuthMessage from "./AuthMessage";
 import InputForm from "./InputForm";
+import Pending from "./Pending";
+
 const Auth = observer(() => {
   return (
     <div className="auth-modal">
@@ -11,6 +13,7 @@ const Auth = observer(() => {
         </h1>
         <AuthMessage />
         <InputForm />
+        <Pending/>
       </div>
     </div>
   );

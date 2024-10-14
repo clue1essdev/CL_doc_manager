@@ -1,5 +1,6 @@
 $font-clr: #faf8ff;
 $border-clr: #aca9bb;
+$popup-scroll-border-clr: #1C1C1C;
 @mixin line-break {
   display: -webkit-box;
   line-clamp: 2;
@@ -25,11 +26,22 @@ $border-clr: #aca9bb;
   z-index: 0;
 }
 
+.area-to-click {
+  position: absolute;
+  width: 100%;
+  min-height: 90%;
+  z-index: 0;
+}
+
+.items {
+  min-height: 90vh;
+}
+
 .modal {
   position: absolute;
   height: 100vh;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   background-color: #000000;
   @include flex-center();
 }
@@ -91,6 +103,7 @@ $border-clr: #aca9bb;
   border-radius: 50%;
   @include flex-center();
   margin-right: 20px;
+  z-index: 1;
 }
 
 .back-btn-img {
@@ -114,6 +127,7 @@ $border-clr: #aca9bb;
   align-items: center;
   text-align: center;
   padding: 5px;
+  z-index: 1;
 }
 
 .item {
@@ -176,30 +190,48 @@ $border-clr: #aca9bb;
 }
 
 .popup {
-  width: 180px;
-  height: 100px;
+  width: 220px;
+  max-height: 500px;
+  padding: 10px;
   background-color: $border-clr;
   border-radius: .5rem;
   @include flex-center();
   position: absolute;
+  z-index: 1;
 }
 
 .popup-buttons {
   width: 100%;
+  max-height: 250px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  overflow: auto;
+  &::-webkit-scrollbar-track {
+    background-color: $border-clr;
+  }
+  &::-webkit-scrollbar {
+    width: 7px;
+    background-color: $border-clr;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $popup-scroll-border-clr;
+    border-radius: 5px;
+  }
 }
 
 .popup-button {
   width: 90%;
   height: 30px;
-  border-radius: .2rem;
+  min-height: 30px;
   padding: 2px;
   padding-left: 10px;
   display: flex;
   align-items: center;
-  margin: 5px;
+  border-bottom: 1px solid $popup-scroll-border-clr;
+  &:last-child {
+    border: none;
+  }
 }
 
 .move-delete-btn-img {
@@ -211,15 +243,16 @@ $border-clr: #aca9bb;
   font-size: .9rem;
 }
 
-// <div className="popup">
-//                 <div className="popup-buttons">
-//                     <div className="move-btn clickable popup-button">
-//                         <img className="move-delete-btn-img" src="move-to-folder-svgrepo-com.svg"></img>
-//                         <p className="btn-name">Move</p>
-//                     </div>
-//                     <div className="delete-btn clickable popup-button">
-//                         <img className="delete-btn-img" src="delete-2-svgrepo-com.svg"></img>
-//                         <p className="delete-btn-name">Delete</p>
-//                     </div>
-//                 </div>
-//             </div>
+.updating-msg {
+  color: white;
+  font-size: 40px; 
+  position: absolute; 
+}
+
+.do-nothing {
+  position: absolute;
+  @include flex-center();
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+}

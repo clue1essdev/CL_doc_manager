@@ -5,7 +5,7 @@ import type { Item } from "../../stores/types";
 import ItemConstructor from "./ItemConstructor";
 
 const Items = observer(() => {
-    const {rootFolder, allFoldersMeta, folderMeta, currentPath} = states;
+    const {rootFolder, allFoldersMeta, folderMeta, currentPath } = states;
     if (rootFolder && "_embedded" in folderMeta) {
         return (
             <>
@@ -34,6 +34,8 @@ const Items = observer(() => {
                 })} 
             </>
         )
+    } else {
+        return <></>
     }
 
 

@@ -59,6 +59,7 @@ class States {
   rootFolder : boolean = true;
 
   pending : boolean = false;
+  updatingInterface : boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -97,6 +98,9 @@ class States {
   }
   toggleMoveOptionSelected = () => {
     this.moveOptionSelected = !this.moveOptionSelected;
+  }
+  toggleUpdatingInterface = () => {
+    this.updatingInterface = !this.updatingInterface;
   }
 
   
@@ -164,12 +168,35 @@ class States {
   }
 
   fetchAllFoldersData = async (collection : string[]) => {
+    console.log("at this point we've started pending folders");
     this.togglePending();
     const allData = await Promise.all(collection.map(url => this.fetchJson(url)));
     this.setAllFoldersMeta(allData);
+    console.log("at this folder we ended pending folders");
     this.togglePending();
   }
   
+  deleteFile = async (path: string) => {
+    
+    console.log("UPDATING INTERFACE NOW: " + this.updatingInterface);
+    const res = await fetch(this.defaultUrl + path, {
+      method: "DELETE",
+      headers: {
+        Authorization: this.token,
+      },
+    });
+    if (!res.ok) {
+      console.log("some error while trying to delete a file");
+      return;
+    }
+    console.log("delition complete");
+    await this.fetchFolderData("");
+    await this.fetchFilesData().then(() =>  {
+      if (this.updatingInterface) this.toggleUpdatingInterface();
+    });
+   
+    console.log("UPDATING INTERFACE NOW:" + this.updatingInterface);
+  }
   
   
   
@@ -195,7 +222,7 @@ class States {
       }
     }
     this.setAllFoldersPaths(paths);
-    this.fetchAllFoldersData(this.allFoldersPaths);
+    await this.fetchAllFoldersData(this.allFoldersPaths);
     if ("message" in objRes) {
       if ("description" in objRes) {
         if (objRes.description === "Resource not found.") {
