@@ -168,17 +168,13 @@ class States {
   }
 
   fetchAllFoldersData = async (collection : string[]) => {
-    console.log("at this point we've started pending folders");
     this.togglePending();
     const allData = await Promise.all(collection.map(url => this.fetchJson(url)));
     this.setAllFoldersMeta(allData);
-    console.log("at this folder we ended pending folders");
     this.togglePending();
   }
   
   deleteFile = async (path: string) => {
-    
-    console.log("UPDATING INTERFACE NOW: " + this.updatingInterface);
     const res = await fetch(this.defaultUrl + path, {
       method: "DELETE",
       headers: {
@@ -189,21 +185,13 @@ class States {
       console.log("some error while trying to delete a file");
       return;
     }
-    console.log("delition complete");
     await this.fetchFolderData("");
     await this.fetchFilesData().then(() =>  {
       if (this.updatingInterface) this.toggleUpdatingInterface();
     });
-   
-    console.log("UPDATING INTERFACE NOW:" + this.updatingInterface);
   }
   
-  
-  
-  
-  
-  
-  
+
   
   
   fetchFolderData = async (path: string) => {
@@ -222,16 +210,19 @@ class States {
       }
     }
     this.setAllFoldersPaths(paths);
+    if (!this.updatingInterface) this.toggleUpdatingInterface();
     await this.fetchAllFoldersData(this.allFoldersPaths);
     if ("message" in objRes) {
       if ("description" in objRes) {
         if (objRes.description === "Resource not found.") {
           if (this.authorisationFailed) this.toggleAuthorisationFailed();
           if (!this.noSuchFolder) this.toggleNoSuchFolder();
+
           return;
         } else if (objRes.description === "Unauthorized") {
           if (this.noSuchFolder) this.toggleNoSuchFolder();
           if (!this.authorisationFailed) this.toggleAuthorisationFailed();
+
           return;
         }
         if (this.noSuchFolder) this.toggleNoSuchFolder();
@@ -239,11 +230,12 @@ class States {
         return;
       }
       if (this.noSuchFolder) this.toggleNoSuchFolder();
-      if (this.authorisationFailed) this.toggleAuthorisationFailed();
+      if (this.authorisationFailed) this.toggleAuthorisationFailed()
     }
     if (path === "") {
       this.toggleAuthorized();
       this.setCategoriesMeta(objRes);
+      if (this.updatingInterface) this.toggleUpdatingInterface();
     }
     this.setFolderMeta(objRes);
   };

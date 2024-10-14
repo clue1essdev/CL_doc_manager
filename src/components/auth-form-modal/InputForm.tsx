@@ -9,8 +9,10 @@ const InputForm = observer(() => {
     fetchFolderData,
     setToken,
     toggleManageDisk,
+    toggleUpdatingInterface,
     authorized,
-    pending
+    pending,
+    updatingInterface
   } = states;
   const inputRef = useRef();
   const handleSubmit = (e: Event) => {
