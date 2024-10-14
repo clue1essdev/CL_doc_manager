@@ -1,9 +1,13 @@
 import { createItemName } from "./helpers/create-item-name";
-import type { Size } from "../../stores/types";
+import type { Item, Size } from "../../stores/types";
 import states from "../../stores/states";
 import { observer } from "mobx-react-lite";
-
-const ItemConstructor = observer(({ type, item }) => {
+interface Props  {
+  type: string,
+  item: Item
+}
+const ItemConstructor = observer((props : Props) => {
+  const  {type, item} = props;
   const {
     toggleModalShowing,
     setCurrentImgName,
@@ -55,7 +59,7 @@ const ItemConstructor = observer(({ type, item }) => {
             setCurrentImgUrl(urlOrigin);
             toggleModalShowing();
           }}
-          onContextMenu={(event: Event) => {
+          onContextMenu={(event) => {
             event.preventDefault();
             setCurrentFile(item.name);
             if (window.innerWidth - 250 < event.clientX) {

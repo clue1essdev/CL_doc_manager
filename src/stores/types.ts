@@ -21,6 +21,7 @@ export interface Embedded {
 }
 
 export interface Item {
+  _embedded?: Embedded;
   name: string;
   exif: ItemExif;
   created: Date;

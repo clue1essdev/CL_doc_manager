@@ -1,6 +1,6 @@
 import "./auth.scss";
 import { observer } from "mobx-react-lite";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import states from "../../stores/states";
 
 const InputForm = observer(() => {
@@ -12,10 +12,10 @@ const InputForm = observer(() => {
     authorized,
     pending,
   } = states;
-  const inputRef = useRef();
-  const handleSubmit = (e: Event) => {
-    e.preventDefault();
-    if (inputRef.current !== undefined) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (inputRef.current !== null) {
       setToken(inputRef.current["value"]);
       fetchFolderData("");
     }
@@ -55,7 +55,7 @@ const InputForm = observer(() => {
       <>
         <p className="pending-msg">Wait, pending...</p>
       </>
-    )
+    );
   }
 });
 

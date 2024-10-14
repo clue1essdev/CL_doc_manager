@@ -6,6 +6,7 @@ import ItemConstructor from "./ItemConstructor";
 
 const Items = observer(() => {
     const {rootFolder, allFoldersMeta, folderMeta, currentPath } = states;
+    const folders = allFoldersMeta.find(el => el.name === currentPath.replace("CaseLabDocuments/", ""));
     if (rootFolder && "_embedded" in folderMeta) {
         return (
             <>
@@ -20,10 +21,10 @@ const Items = observer(() => {
                     );
                 })}        
             </>)
-    } else if (!rootFolder) {
+    } else if (!rootFolder && folders && folders._embedded) {
         return (
             <>
-                {allFoldersMeta.find(el => el.name === currentPath.replace("CaseLabDocuments/", ""))._embedded.items.map((item: Item, index: number) => {
+                {folders._embedded.items.map((item: Item, index: number) => {
                     return (
                     <div className="item-container" key={index}>
                         <ItemConstructor 
