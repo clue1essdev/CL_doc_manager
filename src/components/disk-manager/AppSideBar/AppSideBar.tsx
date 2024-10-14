@@ -10,10 +10,11 @@ const AppSideBar = observer(() => {
     showAllFiles,
     toggleshowAllFiles,
     showCategories,
+    resetPopup
   } = states;
   return (
     <>
-      <aside className="nav-bar">
+      <aside className="nav-bar" onClick={()=> {resetPopup()}}>
         <section className="folders">
           <div className="categories-header">
             <h1 className="title">Categories</h1>

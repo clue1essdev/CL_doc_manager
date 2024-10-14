@@ -18,7 +18,11 @@ const AllFiles = observer(() => {
   if (showAllFiles) {
     return (
       <>
-        {allFilesMeta.items.filter((item : Item) => item.media_type === "image").map((item : Item, index : number) => {
+        {allFilesMeta.items.filter((item : Item) => item.media_type === "image").sort((a, b) => {
+          const textA = a.name.toLocaleUpperCase();
+          const textB = b.name.toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        }).map((item : Item, index : number) => {
           return (
             <div key={index} className="file clickable" 
             onDoubleClick={() => {
@@ -27,6 +31,7 @@ const AllFiles = observer(() => {
                       toggleModalShowing();
                     }}
             >
+              <p className="file-number">{index + 1}.</p>
               <div className="file-preview">file</div>
               <p className="folder-name">{item.name}</p>
             </div>

@@ -63,11 +63,17 @@ $root-folder-bg-clr: #56555a;
 
 .file {
   display: flex;
-  justify-content: flex-start;
   margin: 0.6rem;
   min-height: 2.3rem;
   padding: 0.5rem;
   border-radius: .3rem;
+}
+
+.file-number {
+  font-size: 0.8rem;
+  color: $font-clr;
+  min-width: 30px;
+  max-width: 30px;
 }
 
 .file-preview {

@@ -7,7 +7,7 @@ import Items from "./Items";
 
 
 const ItemsContainer = observer(() => {
-  const { folderMeta, setCurrentPath, currentPath, toggleRootFolder, rootFolder, popupShowing, togglePopupShowing, updatingInterface } = states;
+  const { folderMeta, setCurrentPath, currentPath, toggleRootFolder, rootFolder, popupShowing, resetPopup } = states;
   useEffect(() => {
     if (rootFolder) setCurrentPath("CaseLabDocuments");
   }, [rootFolder, setCurrentPath]
@@ -15,7 +15,7 @@ const ItemsContainer = observer(() => {
   const backBtn = rootFolder? (<></>) 
   : (<div className="back-btn clickable"
       onClick={() => {
-        console.log("clicked back btn")
+        resetPopup();
         toggleRootFolder();
       }}
       >
@@ -27,7 +27,7 @@ const ItemsContainer = observer(() => {
         <div className="items">
           <div className="area-to-click" onClick={() => {
             if (popupShowing) {
-              togglePopupShowing();
+              resetPopup();
             }
           }}></div>
           <div className="path">

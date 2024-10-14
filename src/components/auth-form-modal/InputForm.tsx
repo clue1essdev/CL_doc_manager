@@ -9,10 +9,8 @@ const InputForm = observer(() => {
     fetchFolderData,
     setToken,
     toggleManageDisk,
-    toggleUpdatingInterface,
     authorized,
     pending,
-    updatingInterface
   } = states;
   const inputRef = useRef();
   const handleSubmit = (e: Event) => {
@@ -29,6 +27,7 @@ const InputForm = observer(() => {
           <label>Enter your auth-token here:</label>
           <div className="input-and-input-btn-box">
             <input
+              type="password"
               ref={inputRef}
               className="auth-token-input"
               required={true}

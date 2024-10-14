@@ -15,6 +15,20 @@ $popup-scroll-border-clr: #1C1C1C;
   justify-content: center;
 }
 
+.header {
+  padding-left: 250px;
+  color: $font-clr;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 2.3rem;
+}
+
+.credits {
+  font-size: .8rem;
+}
+
 .manager-page {
   display: grid;
   grid-template-areas:
@@ -24,11 +38,12 @@ $popup-scroll-border-clr: #1C1C1C;
   grid-template-rows: 100px;
   grid-template-columns: 250px;
   z-index: 0;
+  max-width: 100vw;
 }
 
 .area-to-click {
   position: absolute;
-  width: 100%;
+  width: 90%;
   min-height: 90%;
   z-index: 0;
 }
@@ -113,8 +128,7 @@ $popup-scroll-border-clr: #1C1C1C;
 .items-container {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  grid-template-rows: subgrid;
+  grid-template-columns: repeat(18, 1fr);
   grid-area: main;
 }
 
@@ -142,6 +156,7 @@ $popup-scroll-border-clr: #1C1C1C;
 }
 
 .clickable {
+  cursor: pointer;
   &:hover {
     background-color: #6e6d70;
   }
@@ -190,7 +205,7 @@ $popup-scroll-border-clr: #1C1C1C;
 }
 
 .popup {
-  width: 220px;
+  width: 250px;
   max-height: 500px;
   padding: 10px;
   background-color: $border-clr;
@@ -222,8 +237,8 @@ $popup-scroll-border-clr: #1C1C1C;
 
 .popup-button {
   width: 90%;
-  height: 30px;
-  min-height: 30px;
+  height: 35px;
+  min-height: 35px;
   padding: 2px;
   padding-left: 10px;
   display: flex;
@@ -255,4 +270,54 @@ $popup-scroll-border-clr: #1C1C1C;
   height: 100%;
   width: 100%;
   z-index: 3;
+}
+
+
+.error-page {
+  width: 100%;
+  height: 100%;
+  @include flex-center();
+  background-color: $popup-scroll-border-clr;
+}
+
+
+.fatal-error-msg {
+  color: $font-clr;
+  font-size: 3rem;
+  max-width: 800px;
+  text-align: center;
+}
+
+
+.rules {
+  position: absolute;
+  top: 700px;
+  right: 100px;
+  width: 500px;
+  height: 500px;
+  color: $font-clr;
+  border-radius: 2rem;
+  border: 2px solid $border-clr;
+  @include flex-center();
+  flex-direction: column;
+}
+
+.rules-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.rule {
+  font-size: 1.3rem;
+}
+
+.hide-rules {
+  margin-top: 30px;
+  padding: 1rem;
+  border-radius: 2rem;
+  width: 80%;
+  cursor: pointer;
+  &:hover {
+    background-color: $border-clr;
+  }
 }

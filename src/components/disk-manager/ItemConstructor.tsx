@@ -14,13 +14,14 @@ const ItemConstructor = observer(({ type, item }) => {
     setPopupX,
     setPopupY,
     setCurrentFile,
-    popupShowing,
-    currentFile,
+    resetPopup,
+    popupShowing
   } = states;
   if (type === "dir") {
     return (
       <div
         className="item clickable"
+        onClick={ () => resetPopup()}
         onDoubleClick={() => {
           setCurrentPath(item.path.replace("disk:/", ""));
           toggleRootFolder();
@@ -48,6 +49,7 @@ const ItemConstructor = observer(({ type, item }) => {
       return (
         <div
           className="item clickable"
+          onClick={ () => resetPopup()}
           onDoubleClick={() => {
             setCurrentImgName(item.name);
             setCurrentImgUrl(urlOrigin);
@@ -56,8 +58,8 @@ const ItemConstructor = observer(({ type, item }) => {
           onContextMenu={(event: Event) => {
             event.preventDefault();
             setCurrentFile(item.name);
-            if (window.innerWidth - 220 < event.clientX) {
-              setPopupX(event.clientX - 220);
+            if (window.innerWidth - 250 < event.clientX) {
+              setPopupX(event.clientX - 250);
             } else {
               setPopupX(event.clientX);
             }

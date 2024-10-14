@@ -10,7 +10,7 @@ const AuthMessage = observer(() => {
         <strong>
           <p>Success!</p>
         </strong>
-        <p>Authontication was succesfull.</p>
+        <p>Authentication was succesfull.</p>
         <p>You can now manage your CaseLabDocuments folder.</p>
       </div>
     );
@@ -35,7 +35,7 @@ const AuthMessage = observer(() => {
         <p>
           Unfortunately, your Yandex disk has no "/CaseLabDocuments" folder.
         </p>
-        <p>Create "/CaseLabDocuments" folder and try again.</p>
+        <p>Create "/CaseLabDocuments" folder on root level and try again.</p>
       </div>
     );
   }
