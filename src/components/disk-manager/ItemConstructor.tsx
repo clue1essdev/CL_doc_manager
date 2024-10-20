@@ -2,12 +2,12 @@ import { createItemName } from "./helpers/create-item-name";
 import type { Item, Size } from "../../stores/types";
 import states from "../../stores/states";
 import { observer } from "mobx-react-lite";
-interface Props  {
-  type: string,
-  item: Item
+interface Props {
+  type: string;
+  item: Item;
 }
-const ItemConstructor = observer((props : Props) => {
-  const  {type, item} = props;
+const ItemConstructor = observer((props: Props) => {
+  const { type, item } = props;
   const {
     toggleModalShowing,
     setCurrentImgName,
@@ -19,13 +19,13 @@ const ItemConstructor = observer((props : Props) => {
     setPopupY,
     setCurrentFile,
     resetPopup,
-    popupShowing
+    popupShowing,
   } = states;
   if (type === "dir") {
     return (
       <div
         className="item clickable"
-        onClick={ () => resetPopup()}
+        onClick={() => resetPopup()}
         onDoubleClick={() => {
           setCurrentPath(item.path.replace("disk:/", ""));
           toggleRootFolder();
@@ -53,7 +53,7 @@ const ItemConstructor = observer((props : Props) => {
       return (
         <div
           className="item clickable"
-          onClick={ () => resetPopup()}
+          onClick={() => resetPopup()}
           onDoubleClick={() => {
             setCurrentImgName(item.name);
             setCurrentImgUrl(urlOrigin);
