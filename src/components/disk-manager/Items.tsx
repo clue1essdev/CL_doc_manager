@@ -5,7 +5,7 @@ import type { Item } from "../../stores/types";
 import ItemConstructor from "./ItemConstructor";
 
 const Items = observer(() => {
-    const {rootFolder, allFoldersMeta, folderMeta, currentPath } = states;
+    const { allFoldersMeta, currentPath } = states;
     const folders = allFoldersMeta.find(el => el.path.replace("disk:/", "") === currentPath);
     if (folders && folders._embedded) {
         return (

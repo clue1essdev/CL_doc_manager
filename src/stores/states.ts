@@ -15,7 +15,7 @@ class States {
   defaultPath: string = "";
 
   // dynamic path value
-  currentPath: string = "";
+  currentPath: string = "/";
 
   // files/paths
   allFoldersPaths: string[] = [];
@@ -235,20 +235,6 @@ class States {
   */
 
 
-  deepSearchForPaths = async (items : Item[] | undefined) => {
-    console.log("called deepsearch")
-    if (items === undefined || items.length === 0) return;
-    const paths : string[] = this.allFoldersPaths;
-    for (const item of items) {
-      if (item.type === "dir") {
-        this.setAllFoldersPaths([...paths, this.defaultUrl + item.path.replace("disk:/", "")]);
-        const obj : Item = await this.fetchJson(item.path.replace("disk:/", ""));
-        console.log(obj._embedded?.items)
-        this.deepSearchForPaths(obj._embedded?.items);
-      }
-    }
-  }
-
   fetchFolderData = async (path: string) => {
     const result = await fetch(this.defaultUrl + path + this.limit, {
           method: "GET",
@@ -259,11 +245,12 @@ class States {
     
     const objRes = await result.json();
     this.setAllFoldersMeta([...this.allFoldersMeta, objRes]);
+    const pathsToFetch : string[] = []; 
     for (const item of objRes._embedded.items) {
-      if (item.type === "dir") this.fetchFolderData(item.path.replace("disk:/", ""));
+      if (item.type === "dir") pathsToFetch.push(item.path.replace("disk:/", ""));
     }
+    await Promise.all(pathsToFetch.map(url => this.fetchFolderData(url)));
     if (!this.authorized) this.toggleAuthorized();
-    console.log(this.allFoldersMeta)
    }
 
 

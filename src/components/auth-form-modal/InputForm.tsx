@@ -1,6 +1,6 @@
 import "./auth.scss";
 import { observer } from "mobx-react-lite";
-import React, { useRef } from "react";
+import React, {  useRef } from "react";
 import states from "../../stores/states";
 
 const InputForm = observer(() => {
@@ -10,7 +10,6 @@ const InputForm = observer(() => {
     setToken,
     toggleManageDisk,
     authorized,
-    pending,
   } = states;
   const inputRef = useRef<HTMLInputElement>(null);
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {

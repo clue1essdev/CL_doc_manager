@@ -98,9 +98,9 @@ $popup-scroll-border-clr: #1C1C1C;
 
 .path {
   display: flex;
-  align-items: center;
-  height: 50px;
-  width: 600px;
+  align-items: flex-end;
+  height: 100px;
+  width: 80%;
   margin-left: 50px;
   margin-top: 10px;
   border-bottom: 3px solid $border-clr;
@@ -110,6 +110,9 @@ $popup-scroll-border-clr: #1C1C1C;
 .path-name {
   font-size: 1.3rem;
   color: $font-clr;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
 }
 
 .back-btn {
@@ -122,7 +125,7 @@ $popup-scroll-border-clr: #1C1C1C;
 }
 
 .back-btn-img {
-  width: 70%;
+  width: 25px;
 }
 
 .items-container {

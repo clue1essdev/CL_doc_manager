@@ -1,5 +1,5 @@
 import { createItemName } from "./helpers/create-item-name";
-import type { Item, Size } from "../../stores/types";
+import type { Item } from "../../stores/types";
 import states from "../../stores/states";
 import { observer } from "mobx-react-lite";
 interface Props {
@@ -20,8 +20,7 @@ const ItemConstructor = observer((props: Props) => {
     setCurrentFile,
     resetPopup,
     popupShowing,
-
-    currentPath
+    rootFolder
   } = states;
   if (type === "dir") {
     return (
@@ -30,7 +29,7 @@ const ItemConstructor = observer((props: Props) => {
         onClick={() => resetPopup()}
         onDoubleClick={() => {
           setCurrentPath(item.path.replace("disk:/", ""));
-          console.log(currentPath)
+          if (rootFolder) toggleRootFolder();
         }}
       >
         <div className="img-container">
@@ -41,17 +40,8 @@ const ItemConstructor = observer((props: Props) => {
     );
   } else if (type === "file") {
     if (item.media_type === "image") {
-      let url: string = "";
-      let urlOrigin: string = "";
-      const indexS: number = item.sizes
-        ? item.sizes.findIndex((el: Size) => el.name === "ORIGINAL")
-        : -1;
-      if (indexS !== -1) url = item.sizes ? item.sizes[indexS].url : "";
-      const indexOrigin: number = item.sizes
-        ? item.sizes.findIndex((el: Size) => el.name === "ORIGINAL")
-        : -1;
-      if (indexOrigin !== -1)
-        urlOrigin = item.sizes ? item.sizes[indexOrigin].url : "";
+      const url: string = item.sizes ? item.sizes[5] ? item.sizes[5].url : "" : "";
+      const urlOrigin = item.sizes ? item.sizes[0].url : "";
       return (
         <div
           className="item clickable"

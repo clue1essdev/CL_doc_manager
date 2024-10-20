@@ -3,8 +3,8 @@ import states from "../../stores/states";
 import "./disk-manager.scss";
 
 const PendingMessage = observer(() => {
-    const {pending, updatingInterface} = states;
-    if (false) {
+    const {updatingInterface} = states;
+    if (updatingInterface) {
         return (<>
         <div className="do-nothing">
             <h1 className="updating-msg">Wait, updating data...</h1>

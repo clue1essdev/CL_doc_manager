@@ -23,8 +23,13 @@ const Categories = observer(() => {
                 <p className="folder-name">Back to root folder</p>
               </div>
         {
-        allFoldersMeta.map((item: Item, index: number) => {
+        [...allFoldersMeta].sort((a, b) => {
+          const textA = a.name.toLocaleUpperCase();
+          const textB = b.name.toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        }).map((item: Item, index: number) => {
           if (item.type === "dir") {
+            if (item.name === "disk") return;
             return (
               <div key={index} className="category clickable"
                 onDoubleClick={() => {
