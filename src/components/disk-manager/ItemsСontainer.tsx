@@ -21,7 +21,7 @@ const ItemsContainer = observer(() => {
       >
       <img src="./left-arrow-svgrepo-com.svg" alt="back-btn" className="back-btn-img"></img>
     </div>)
-  if ("_embedded" in folderMeta) {
+  if (true) {
     return (
       <>
         <div className="items">

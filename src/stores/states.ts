@@ -10,11 +10,12 @@ interface Items {
 class States {
   // hardcoded path values
   filesPathUrl: string = "https://cloud-api.yandex.net/v1/disk/resources/files";
-  defaultUrl: string = "https://cloud-api.yandex.net/v1/disk/resources?path=";
-  defaultPath: string = "CaseLabDocuments";
+  defaultUrl: string = "https://cloud-api.yandex.net/v1/disk/resources?path=/";
+  limit: string = "&limit=1000";
+  defaultPath: string = "";
 
   // dynamic path value
-  currentPath: string = "CaseLabDocuments";
+  currentPath: string = "";
 
   // files/paths
   allFoldersPaths: string[] = [];
@@ -134,7 +135,7 @@ class States {
     this.allFoldersPaths = paths;
   };
   setAllFoldersMeta = (arr: Item[]) => {
-    this.allFoldersMeta = structuredClone(arr);
+    this.allFoldersMeta = arr;
   };
   setCurrentPath = (path: string) => {
     this.currentPath = path;
@@ -174,12 +175,14 @@ class States {
   };
 
   fetchAllFoldersData = async (collection: string[]) => {
-    this.togglePending();
+    let current = this.allFoldersMeta;
+    
     const allData = await Promise.all(
       collection.map((url) => this.fetchJson(url))
     );
-    this.setAllFoldersMeta(allData);
-    this.togglePending();
+    current = [...current, ...allData]
+    this.setAllFoldersMeta(current);
+    
   };
 
   deleteFile = async (path: string) => {
@@ -230,57 +233,87 @@ class States {
   and the reason why it is breaking
   everything is beyond my comprehension
   */
-  fetchFolderData = async (path: string) => {
-    const result = await fetch(this.defaultUrl + this.currentPath, {
-      method: "GET",
-      headers: {
-        Authorization: this.token,
-      },
-    });
-    const objRes = await result.json();
 
-    const paths: string[] = [];
-    if (objRes._embedded) {
-      for (const item of objRes._embedded.items) {
-        if (item.type === "dir") {
-          paths.push(this.defaultUrl + item.path.replace("disk:/", ""));
-        }
+
+  deepSearchForPaths = async (items : Item[] | undefined) => {
+    console.log("called deepsearch")
+    if (items === undefined || items.length === 0) return;
+    const paths : string[] = this.allFoldersPaths;
+    for (const item of items) {
+      if (item.type === "dir") {
+        this.setAllFoldersPaths([...paths, this.defaultUrl + item.path.replace("disk:/", "")]);
+        const obj : Item = await this.fetchJson(item.path.replace("disk:/", ""));
+        console.log(obj._embedded?.items)
+        this.deepSearchForPaths(obj._embedded?.items);
       }
     }
-    this.setAllFoldersPaths(paths);
-    if (!this.updatingInterface) this.toggleUpdatingInterface();
-    await this.fetchAllFoldersData(this.allFoldersPaths);
-    if ("message" in objRes) {
-      if ("description" in objRes) {
-        if (objRes.description === "Resource not found.") {
-          if (this.authorisationFailed) this.toggleAuthorisationFailed();
-          if (!this.noSuchFolder) this.toggleNoSuchFolder();
-          if (this.updatingInterface) this.toggleUpdatingInterface();
-          return;
-        } else if (objRes.description === "Unauthorized") {
-          if (this.noSuchFolder) this.toggleNoSuchFolder();
-          if (!this.authorisationFailed) this.toggleAuthorisationFailed();
-          if (this.updatingInterface) this.toggleUpdatingInterface();
-          return;
-        }
-        if (this.noSuchFolder) this.toggleNoSuchFolder();
-        if (this.authorisationFailed) this.toggleAuthorisationFailed();
-        if (this.updatingInterface) this.toggleUpdatingInterface();
-        return;
-      }
-      if (this.noSuchFolder) this.toggleNoSuchFolder();
-      if (this.authorisationFailed) this.toggleAuthorisationFailed();
+  }
+
+  fetchFolderData = async (path: string) => {
+    const result = await fetch(this.defaultUrl + path + this.limit, {
+          method: "GET",
+          headers: {
+            Authorization: this.token,
+          },
+        });
+    
+    const objRes = await result.json();
+    this.setAllFoldersMeta([...this.allFoldersMeta, objRes]);
+    for (const item of objRes._embedded.items) {
+      if (item.type === "dir") this.fetchFolderData(item.path.replace("disk:/", ""));
     }
-    if (path === "") {
-      this.toggleAuthorized();
-      this.setCategoriesMeta(objRes);
-      if (this.updatingInterface) this.toggleUpdatingInterface();
-    }
-    this.setFolderMeta(objRes);
-  };
+    if (!this.authorized) this.toggleAuthorized();
+    console.log(this.allFoldersMeta)
+   }
+
+
+
+  // fetchFolderData = async (path: string) => {
+  //   const result = await fetch(this.defaultUrl + path, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: this.token,
+  //     },
+  //   });
+  //   const objRes = await result.json();
+  //   if (objRes._embedded) {
+  //     this.deepSearchForPaths(objRes._embedded.items)
+  //   }
+  //   console.log(this.allFoldersPaths)
+  //   if (!this.updatingInterface) this.toggleUpdatingInterface();
+  //   console.log(this.allFoldersPaths)
+  //   await this.fetchAllFoldersData(this.allFoldersPaths);
+  //   if ("message" in objRes) {
+  //     if ("description" in objRes) {
+  //       if (objRes.description === "Resource not found.") {
+  //         if (this.authorisationFailed) this.toggleAuthorisationFailed();
+  //         if (!this.noSuchFolder) this.toggleNoSuchFolder();
+  //         if (this.updatingInterface) this.toggleUpdatingInterface();
+  //         return;
+  //       } else if (objRes.description === "Unauthorized") {
+  //         if (this.noSuchFolder) this.toggleNoSuchFolder();
+  //         if (!this.authorisationFailed) this.toggleAuthorisationFailed();
+  //         if (this.updatingInterface) this.toggleUpdatingInterface();
+  //         return;
+  //       }
+  //       if (this.noSuchFolder) this.toggleNoSuchFolder();
+  //       if (this.authorisationFailed) this.toggleAuthorisationFailed();
+  //       if (this.updatingInterface) this.toggleUpdatingInterface();
+  //       return;
+  //     }
+  //     if (this.noSuchFolder) this.toggleNoSuchFolder();
+  //     if (this.authorisationFailed) this.toggleAuthorisationFailed();
+  //   }
+  //   if (path === "") {
+  //     this.toggleAuthorized();
+  //     this.setCategoriesMeta(objRes);
+  //     if (this.updatingInterface) this.toggleUpdatingInterface();
+  //   }
+  //   this.setFolderMeta(objRes);
+  // };
 
   fetchFilesData = async () => {
-    const result = await fetch(this.filesPathUrl, {
+    const result = await fetch(this.filesPathUrl + this.limit.replace("&", "?"), {
       method: "GET",
       headers: {
         Authorization: this.token,

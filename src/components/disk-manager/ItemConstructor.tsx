@@ -20,6 +20,8 @@ const ItemConstructor = observer((props: Props) => {
     setCurrentFile,
     resetPopup,
     popupShowing,
+
+    currentPath
   } = states;
   if (type === "dir") {
     return (
@@ -28,7 +30,7 @@ const ItemConstructor = observer((props: Props) => {
         onClick={() => resetPopup()}
         onDoubleClick={() => {
           setCurrentPath(item.path.replace("disk:/", ""));
-          toggleRootFolder();
+          console.log(currentPath)
         }}
       >
         <div className="img-container">

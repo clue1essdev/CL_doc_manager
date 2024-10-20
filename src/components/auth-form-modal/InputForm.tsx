@@ -38,7 +38,8 @@ const InputForm = observer(() => {
         </div>
       </form>
     );
-  } else if (!pending) {
+    // было !pending
+  } else  {
     return (
       <button
         className="go-to-disk-btn"
@@ -50,13 +51,13 @@ const InputForm = observer(() => {
         Go to disk
       </button>
     );
-  } else {
+  } /* else {
     return (
       <>
         <p className="pending-msg">Wait, pending...</p>
       </>
     );
-  }
+  } */
 });
 
 export default InputForm;

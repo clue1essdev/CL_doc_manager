@@ -4,7 +4,7 @@ import "./disk-manager.scss";
 
 const PendingMessage = observer(() => {
     const {pending, updatingInterface} = states;
-    if (pending || updatingInterface) {
+    if (false) {
         return (<>
         <div className="do-nothing">
             <h1 className="updating-msg">Wait, updating data...</h1>

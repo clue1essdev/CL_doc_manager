@@ -4,14 +4,14 @@ import "./side-bar.scss";
 import "../disk-manager.scss";
 import type { Item } from "../../../stores/types";
 const Categories = observer(() => {
-  const { categoriesMeta, showCategories, rootFolder, setCurrentPath, toggleRootFolder } = states;
+  const { allFoldersMeta, showCategories, rootFolder, setCurrentPath, toggleRootFolder } = states;
   if (showCategories) {
     return (
       <>
         <div  className="category clickable root"
                 onDoubleClick={() => {
                   if (!rootFolder) {
-                    setCurrentPath("CaseLabDocuments");
+                    setCurrentPath("");
                     toggleRootFolder();
                   }
 
@@ -23,7 +23,7 @@ const Categories = observer(() => {
                 <p className="folder-name">Back to root folder</p>
               </div>
         {
-        categoriesMeta.map((item: Item, index: number) => {
+        allFoldersMeta.map((item: Item, index: number) => {
           if (item.type === "dir") {
             return (
               <div key={index} className="category clickable"
