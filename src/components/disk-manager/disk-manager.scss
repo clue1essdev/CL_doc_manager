@@ -132,6 +132,14 @@ $popup-scroll-border-clr: #1C1C1C;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(18, 1fr);
+  @media (max-width: 2400px) {
+    grid-template-columns: repeat(14, 1fr);
+  }
+  @media (max-width: 1920px) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+  
+  
   grid-area: main;
 }
 
@@ -261,10 +269,23 @@ $popup-scroll-border-clr: #1C1C1C;
   font-size: .9rem;
 }
 
+.updating-msg-container {
+  background-color: $border-clr;
+  border-radius: 1rem;
+  width: 800px;
+  height: 8rem;
+  z-index: 3;
+  @include flex-center();
+  text-align: center;
+
+}
+
 .updating-msg {
-  color: white;
-  font-size: 40px; 
-  position: absolute; 
+  color: $popup-scroll-border-clr;
+  width: 90%;
+  line-break: normal;
+  font-size: 1.5rem;  
+  z-index: 3;
 }
 
 .do-nothing {
@@ -298,11 +319,13 @@ $popup-scroll-border-clr: #1C1C1C;
   right: 5px;
   width: 500px;
   height: 500px;
-  color: $font-clr;
+  color: $popup-scroll-border-clr;
   border-radius: 2rem;
   border: 2px solid $border-clr;
   @include flex-center();
   flex-direction: column;
+  z-index: 4;
+  background-color: $border-clr;
 }
 
 .rules-title {
@@ -344,7 +367,7 @@ $popup-scroll-border-clr: #1C1C1C;
   display: grid;
   align-items: center;
   position: fixed;
-  right: 5px;
+  right: -1.5rem;
   top: 920px;
   &:hover {
     background-color: #6e6d70;
@@ -354,5 +377,6 @@ $popup-scroll-border-clr: #1C1C1C;
     position: absolute;
     left: 18%;
     transform: rotate(180deg);
+    z-index: 4;
   }
 }

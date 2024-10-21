@@ -20,7 +20,6 @@ class States {
   currentPath: string = "/";
 
   // files/paths
-  allFoldersPaths: string[] = [];
   allFoldersMeta: Item[] = [];
 
   folderMeta: FolderMetaInterface | ErrorObject = {
@@ -44,7 +43,6 @@ class States {
 
   // flags
   authorized: boolean = false;
-  noSuchFolder: boolean = false;
   authorisationFailed: boolean = false;
   manageDisk: boolean = false;
   modalShowing: boolean = false;
@@ -60,6 +58,7 @@ class States {
   pending: boolean = false;
   updatingInterface: boolean = false;
 
+  fileExistsError: boolean = false;
   someErrorThatBrokeEverythingOccurred: boolean = false;
 
   constructor() {
@@ -72,9 +71,6 @@ class States {
   };
   toggleAuthorized = () => {
     this.authorized = !this.authorized;
-  };
-  toggleNoSuchFolder = () => {
-    this.noSuchFolder = !this.noSuchFolder;
   };
   toggleManageDisk = () => {
     this.manageDisk = !this.manageDisk;
@@ -107,7 +103,9 @@ class States {
   toggleHideRules = () => {
     this.hideRules = !this.hideRules;
   };
-
+  toggleFileExistsError = () => {
+    this.fileExistsError = !this.fileExistsError;
+  }
   setErrorOccurred = () => {
     this.someErrorThatBrokeEverythingOccurred = true;
   };
@@ -133,9 +131,6 @@ class States {
       this.categoriesMeta = obj._embedded.items;
     }
   };
-  setAllFoldersPaths = (paths: string[]) => {
-    this.allFoldersPaths = paths;
-  };
   setAllFoldersMeta = (arr: Item[]) => {
     this.allFoldersMeta = arr;
   };
@@ -160,57 +155,29 @@ class States {
   };
 
   //async
-  fetchJson = async (path: string) => {
-    const res = await fetch(path, {
-      method: "GET",
-      headers: {
-        Authorization: this.token,
-      },
-    });
-    if (!res.ok) {
-      console.log("some error during fetch");
-      this.setErrorOccurred();
-      return;
-    }
-    const obj = await res.json();
-    return obj;
-  };
-
-  fetchAllFoldersData = async (collection: string[]) => {
-    let current = this.allFoldersMeta;
-    
-    const allData = await Promise.all(
-      collection.map((url) => this.fetchJson(url))
-    );
-    current = [...current, ...allData]
-    this.setAllFoldersMeta(current);
-    
-  };
 
   deleteFile = async (path: string) => {
-    const res = await fetch(this.defaultUrl + path, {
+    const url : string = "https://cloud-api.yandex.net/v1/disk/resources?path=";
+    const res = await fetch(url + path, {
       method: "DELETE",
       headers: {
         Authorization: this.token,
       },
     });
     if (!res.ok) {
-      console.log("some error while trying to delete a file");
+      console.log("some unknown error occured when tried to move the file");
       this.setErrorOccurred();
-      return;
+      return new Promise((resolve, reject) => reject("error"));
     }
-    await this.fetchFolderData("");
-    await this.fetchFilesData().then(() => {
-      if (this.updatingInterface) this.toggleUpdatingInterface();
-    });
+    return new Promise(resolve => resolve(1));
   };
 
   moveFile = async (path: string) => {
+    if (!this.updatingInterface) this.toggleUpdatingInterface();
     const url = "https://cloud-api.yandex.net/v1/disk/resources/move?";
     const from = "from=";
     const to = "&path=";
-    const realPath = path === this.defaultPath ? "" : "/" + path;
-    const fullUrl = `${url}${from}${this.currentPath}/${this.currentFile}${to}${this.defaultPath}${realPath}/${this.currentFile}`;
+    const fullUrl = `${url}${from}${this.currentPath === "" ? this.currentPath : "/" + this.currentPath}/${this.currentFile}${to}${this.defaultPath}${path === "/" ? path : path + "/"}${this.currentFile}`;
     const res = await fetch(fullUrl, {
       method: "POST",
       headers: {
@@ -218,23 +185,66 @@ class States {
       },
     });
     if (!res.ok) {
-      this.setErrorOccurred();
-      console.log("some error accured when tried to move file");
-      return;
+      if (res.status === 409) {
+        console.log("oops, file already exists");
+        this.toggleFileExistsError();
+        setTimeout(() => {
+              if (this.fileExistsError) {
+                this.toggleFileExistsError();
+                this.toggleUpdatingInterface();
+              }
+          }, 7000);
+        return new Promise ((resolve, reject) => reject(409));
+      } else {
+        this.setErrorOccurred();
+        console.log("some unknown error occured when tried to move the file");
+        return new Promise ((resolve, reject) => reject("error"));
+      }
     }
-    await this.fetchFolderData("").then(() => {
-      if (this.updatingInterface) this.toggleUpdatingInterface();
-    });
+    return new Promise(resolve => resolve(1));
   };
-
-  /* 
-  this thing right here MUST be changed
-  it's giant, it's disgusting
-  and under certian conditions
-  it breaks EVERYTHING,
-  and the reason why it is breaking
-  everything is beyond my comprehension
-  */
+  updateFoldersDataAfterMoveOrDelete = (arrFiles: Items, arrFolders : Item[], path : string, action: string) => {
+    const temp : Item[] = arrFolders;
+    const tempFiles : Items = arrFiles;
+    let targetItem : Item | null = null;
+    // delete item from allFoldersMeta
+    for (let i = 0; i < temp.length; i++) {
+      const item = temp[i];
+      if (item._embedded) {
+        for (let j = 0; j < item._embedded.items.length; j++) {
+          const current = item._embedded.items[j];
+          if (current.name === this.currentFile) {
+            targetItem = current;
+            item._embedded.items.splice(j, 1);
+            break;
+          }
+        }
+        if (targetItem) break;
+      }
+    }
+    // move deleted file to another folder if action = move
+    if (action === "move") {
+      for (const item of temp) {
+        if (item.path === "disk:" + path)   {
+          if (item._embedded && targetItem) item._embedded.items.push(targetItem);
+          break;
+        }
+        }
+    }
+    // delete file from allFiles too if action = delete
+    if (action === "delete") {
+      for (let i = 0; i < tempFiles.items.length; i++) {
+        const item = tempFiles.items[i];
+        if (item.name === this.currentFile) {
+          tempFiles.items.splice(i, 1);
+          break
+        }
+        this.setFilesMeta(tempFiles);
+        
+      }
+    }
+    this.setAllFoldersMeta(temp);
+  }
 
   authorize = async(path: string) => {
     if (!this.updatingInterface) this.toggleUpdatingInterface();
@@ -254,6 +264,7 @@ class States {
           }
         }
       }
+      if (this.authorisationFailed) this.toggleAuthorisationFailed();
       if (this.updatingInterface) this.toggleUpdatingInterface();
       return new Promise(resolve => resolve(1));
   }
@@ -261,7 +272,7 @@ class States {
 
   fetchFolderData = async (path: string) => {
     if (!this.updatingInterface) this.toggleUpdatingInterface();
-    const objRes = await fetch(this.defaultUrl + path + "&limit=" +this.LIMIT, {
+    const objRes = await fetch(this.defaultUrl + path + "&limit=" + (Number(this.LIMIT) / 5).toString(), {
           method: "GET",
           headers: {
             Authorization: this.token,

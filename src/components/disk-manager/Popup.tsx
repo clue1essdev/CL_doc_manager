@@ -3,19 +3,14 @@ import { observer } from "mobx-react-lite" ;
 import states from "../../stores/states";
 
 const Popup = observer(() => {
-    const { popupShowing, moveOptionSelected, popupX, popupY, currentFile, currentPath, rootFolder, updatingInterface, allFoldersMeta, defaultPath, toggleMoveOptionSelected, togglePopupShowing, toggleRootFolder, deleteFile, toggleUpdatingInterface, moveFile, resetPopup } = states;
-    const moveToRootBtn = rootFolder
-    ? <></>
-    : (<div className="clickable popup-button" onDoubleClick={() => {
-        moveFile(defaultPath);
-        if (!updatingInterface) toggleUpdatingInterface();
-        if (!rootFolder) toggleRootFolder();
-        if (popupShowing) togglePopupShowing();
-        resetPopup()
-    }}>
-        <img className="move-delete-btn-img" src="folder-svgrepo-com.svg"></img>
-        <p className="btn-name">{defaultPath} (root)</p>
-    </div>) 
+    const { popupShowing, moveOptionSelected, popupX, popupY, currentFile, currentPath, allFoldersMeta, allFilesMeta, toggleMoveOptionSelected, togglePopupShowing, deleteFile, toggleUpdatingInterface, moveFile, resetPopup, updateFoldersDataAfterMoveOrDelete } = states;
+    const moveOrDelete : {
+        move: string;
+        delete: string
+    } = {
+        move: "move",
+        delete: "delete"
+    }
     if (popupShowing && ! moveOptionSelected) {
         return (
             <>
@@ -30,11 +25,13 @@ const Popup = observer(() => {
                         </div>
                         <div className="delete-btn clickable popup-button" onDoubleClick={
                                 () => {
-                                   
-                                    deleteFile(`${currentPath}/${currentFile}`);
-                                    if (!updatingInterface) toggleUpdatingInterface();
-                                    if (!rootFolder) toggleRootFolder();
                                     if (popupShowing) togglePopupShowing();
+                                    toggleUpdatingInterface();
+                                    resetPopup();
+                                    deleteFile(`${currentPath}/${currentFile}`).then(() => {
+                                        updateFoldersDataAfterMoveOrDelete(allFilesMeta, allFoldersMeta, "", moveOrDelete.delete);
+                                        toggleUpdatingInterface();
+                                    });
                                 }
                             }>
                             <img className="move-delete-btn-img" src="delete-2-svgrepo-com.svg"></img>
@@ -49,15 +46,16 @@ const Popup = observer(() => {
             <>
                 <div className="popup" style={{top: popupY, left: popupX}}>
                     <div className="popup-buttons">
-                        {moveToRootBtn}
                         {allFoldersMeta.filter((item) => item.path.replace("disk:/", "") !== currentPath).map((item, index) => {
                             return (
                                 <div key={index} className="clickable popup-button" onDoubleClick={() => {
-                                    moveFile(item.name);
-                                    if (!updatingInterface) toggleUpdatingInterface();
-                                    if (!rootFolder) toggleRootFolder();
                                     if (popupShowing) togglePopupShowing();
                                     resetPopup();
+                                    moveFile(item.path.replace("disk:", "")).then(() => {
+                                        updateFoldersDataAfterMoveOrDelete(allFilesMeta, allFoldersMeta, item.path.replace("disk:", ""), moveOrDelete.move);
+                                        toggleUpdatingInterface();
+                                    }
+                                    )
                                 }}>
                                     <img className="move-delete-btn-img" src="folder-svgrepo-com.svg"></img>
                                     <p className="btn-name">{item.name}</p>

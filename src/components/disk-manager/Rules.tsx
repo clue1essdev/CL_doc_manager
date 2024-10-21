@@ -13,7 +13,8 @@ const Rules = observer(() => {
       <li className="rule">Click on move option to move file. You'll see a list of options (folders) that you can move file to</li>
       <li className="rule">Double click on the folder option to move file in that folder</li>
     </ol>
-    <div className="hide-rules" onClick={() => {
+    <div className="hide-rules" onClick={(e) => {
+        e.stopPropagation();
         if (!hideRules) toggleHideRules();}}>
       <img src="./arrow.svg" alt="show-hide-rules-btn" className="show-hide-rules-btn"></img>
     </div> 
