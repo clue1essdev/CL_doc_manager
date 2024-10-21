@@ -131,16 +131,16 @@ $popup-scroll-border-clr: #1C1C1C;
 .items-container {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(18, 1fr);
-  @media (max-width: 2400px) {
-    grid-template-columns: repeat(14, 1fr);
-  }
-  @media (max-width: 1920px) {
-    grid-template-columns: repeat(12, 1fr);
-  }
-  
-  
   grid-area: main;
+  grid-template-columns: repeat(18, 1fr);
+  & {
+    @media (max-width: 2400px) {
+      grid-template-columns: repeat(14, 1fr);
+    }
+    @media (max-width: 1920px) {
+      grid-template-columns: repeat(12, 1fr);
+    }
+  }
 }
 
 .item-container {
