@@ -2,6 +2,7 @@ import { createItemName } from "./helpers/create-item-name";
 import type { Item } from "../../stores/types";
 import states from "../../stores/states";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 interface Props {
   type: string;
   item: Item;
@@ -22,8 +23,15 @@ const ItemConstructor = observer((props: Props) => {
     popupShowing,
     rootFolder,
     SMALL_IMG_INDEX,
-    BIG_IMG_INDEX
+    BIG_IMG_INDEX,
+    moveOptionSelected,
+    popupY
   } = states;
+    useEffect(() => {
+      if (moveOptionSelected) {
+        if (popupY + 220 > window.innerHeight) setPopupY(popupY - 10);
+      }
+    }, [setPopupY, moveOptionSelected, popupY]);
   if (type === "dir") {
     return (
       <div
@@ -61,11 +69,7 @@ const ItemConstructor = observer((props: Props) => {
             } else {
               setPopupX(event.clientX);
             }
-            if (window.innerHeight - 250 < event.clientY) {
-              setPopupY(event.clientY - 250);
-            } else {
-              setPopupY(event.clientY);
-            }
+            setPopupY(event.clientY + 70);
             if (popupShowing) {
               togglePopupShowing();
               togglePopupShowing();

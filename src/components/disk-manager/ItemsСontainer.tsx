@@ -33,8 +33,9 @@ const ItemsContainer = observer(() => {
     return (
       <>
         <div className="items">
-          <div className="area-to-click" onClick={() => {
+          <div className="area-to-click" onClick={(e) => {
             if (popupShowing) {
+              e.stopPropagation();
               resetPopup();
             }
           }}></div>
