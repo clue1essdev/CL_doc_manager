@@ -20,7 +20,9 @@ const ItemConstructor = observer((props: Props) => {
     setCurrentFile,
     resetPopup,
     popupShowing,
-    rootFolder
+    rootFolder,
+    SMALL_IMG_INDEX,
+    BIG_IMG_INDEX
   } = states;
   if (type === "dir") {
     return (
@@ -40,8 +42,8 @@ const ItemConstructor = observer((props: Props) => {
     );
   } else if (type === "file") {
     if (item.media_type === "image") {
-      const url: string = item.sizes ? item.sizes[5] ? item.sizes[5].url : "" : "";
-      const urlOrigin = item.sizes ? item.sizes[0].url : "";
+      const url: string = item.sizes ? item.sizes[SMALL_IMG_INDEX] ? item.sizes[SMALL_IMG_INDEX].url : "" : "";
+      const urlOrigin = item.sizes ? item.sizes[BIG_IMG_INDEX].url : "";
       return (
         <div
           className="item clickable"

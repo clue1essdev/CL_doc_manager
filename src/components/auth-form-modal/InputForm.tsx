@@ -9,14 +9,26 @@ const InputForm = observer(() => {
     fetchFolderData,
     setToken,
     toggleManageDisk,
+    toggleAuthorized,
+    authorize,
+    togglePending,
+    toggleUpdatingInterface,
     authorized,
+    pending,
   } = states;
   const inputRef = useRef<HTMLInputElement>(null);
   const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputRef.current !== null) {
       setToken(inputRef.current["value"]);
-      fetchFolderData("");
+      authorize("").then(() => {
+        toggleAuthorized();
+        if(!pending) togglePending();
+        fetchFolderData("").then(() => {
+          togglePending();
+          toggleUpdatingInterface();
+        });
+      }).catch(er => console.log(er));
     }
   };
   if (!authorized) {
@@ -38,7 +50,7 @@ const InputForm = observer(() => {
       </form>
     );
     // было !pending
-  } else  {
+  } else if (!pending)  {
     return (
       <button
         className="go-to-disk-btn"
@@ -50,13 +62,13 @@ const InputForm = observer(() => {
         Go to disk
       </button>
     );
-  } /* else {
+  } else {
     return (
       <>
         <p className="pending-msg">Wait, pending...</p>
       </>
     );
-  } */
+  } 
 });
 
 export default InputForm;

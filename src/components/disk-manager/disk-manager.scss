@@ -78,7 +78,7 @@ $popup-scroll-border-clr: #1C1C1C;
 }
 
 .modal-img {
-  min-height: 90%;
+  
   max-height: 90%;
   max-width: 95%;
 }
@@ -295,7 +295,7 @@ $popup-scroll-border-clr: #1C1C1C;
 .rules {
   position: absolute;
   top: 700px;
-  right: 100px;
+  right: 5px;
   width: 500px;
   height: 500px;
   color: $font-clr;
@@ -314,13 +314,45 @@ $popup-scroll-border-clr: #1C1C1C;
   font-size: 1.3rem;
 }
 
-.hide-rules {
-  margin-top: 30px;
-  padding: 1rem;
-  border-radius: 2rem;
-  width: 80%;
-  cursor: pointer;
+.hide-rules  {
+  background: transparent;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  display: grid;
+  align-items: center;
+  position: absolute;
+  left: -3.4rem;
   &:hover {
-    background-color: $border-clr;
+    background-color: #6e6d70;
+  }
+  .show-hide-rules-btn {
+    width: 60%;
+    position: absolute;
+    left: 25%;
+  }
+}
+.show-rules {
+  background: transparent;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  padding: 0;
+  border: none;
+  display: grid;
+  align-items: center;
+  position: fixed;
+  right: 5px;
+  top: 920px;
+  &:hover {
+    background-color: #6e6d70;
+  }
+  .show-hide-rules-btn {
+    width: 60%;
+    position: absolute;
+    left: 18%;
+    transform: rotate(180deg);
   }
 }

@@ -3,18 +3,8 @@ import states from "../../../stores/states";
 import "./side-bar.scss";
 import "../disk-manager.scss";
 import type { Item } from "../../../stores/types";
-import type { Size } from "../../../stores/types";
 const AllFiles = observer(() => {
-  const { showAllFiles, allFilesMeta, setCurrentImgName, setCurrentImgUrl, toggleModalShowing } = states;
-  const findUrl = (item : Item) => {
-    let urlOrigin: string = "";
-    const indexOrigin: number = item.sizes
-      ? item.sizes.findIndex((el: Size) => el.name === "ORIGINAL")
-      : -1;
-    if (indexOrigin !== -1)
-      urlOrigin = item.sizes ? item.sizes[indexOrigin].url : "";
-    return urlOrigin;
-  }
+  const { showAllFiles, allFilesMeta, BIG_IMG_INDEX, SMALL_IMG_INDEX, setCurrentImgName, setCurrentImgUrl, toggleModalShowing } = states;
   if (showAllFiles) {
     return (
       <>
@@ -27,12 +17,12 @@ const AllFiles = observer(() => {
             <div key={index} className="file clickable" 
             onDoubleClick={() => {
                       setCurrentImgName(item.name);
-                      setCurrentImgUrl(findUrl(item));
+                      setCurrentImgUrl(item.sizes? item.sizes[BIG_IMG_INDEX].url : "");
                       toggleModalShowing();
                     }}
             >
               <p className="file-number">{index + 1}.</p>
-              <div className="file-preview">file</div>
+              <div className="file-preview" style={{backgroundImage: `url(${item.sizes? item.sizes[SMALL_IMG_INDEX].url : ""})`}}></div>
               <p className="folder-name">{item.name}</p>
             </div>
           );
