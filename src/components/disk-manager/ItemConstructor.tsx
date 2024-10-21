@@ -50,7 +50,14 @@ const ItemConstructor = observer((props: Props) => {
     );
   } else if (type === "file") {
     if (item.media_type === "image") {
-      const url: string = item.sizes ? item.sizes[SMALL_IMG_INDEX] ? item.sizes[SMALL_IMG_INDEX].url : "" : "";
+      let url: string = "";
+      if (item.sizes) {
+        if (item.sizes[SMALL_IMG_INDEX]) {
+          url = item.sizes[SMALL_IMG_INDEX].url;
+        } else {
+          url = item.sizes[BIG_IMG_INDEX].url ? item.sizes[BIG_IMG_INDEX].url : "";
+        }
+      }
       const urlOrigin = item.sizes ? item.sizes[BIG_IMG_INDEX].url : "";
       return (
         <div
