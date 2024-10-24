@@ -60,7 +60,23 @@
 
 ## Демонстрация
 
----
+### Авторизация:
+![image](https://github.com/user-attachments/assets/547c7f47-182a-48e0-8b00-1f3a8b8be926)
+
+### Основной интерфейс:
+![image](https://github.com/user-attachments/assets/7da7d820-8321-48b3-983b-6d88a985ea49)
+
+## Открытие изображения большого размера в модальном окне
+![demo3](https://github.com/user-attachments/assets/f2f4ee82-38a3-4713-a0d5-df8242236139)
+
+
+### Попап для управления файлами
+![image](https://github.com/user-attachments/assets/1365feab-c764-4ed0-ab97-451cc98ab278)
+![image](https://github.com/user-attachments/assets/89897ea4-4fe0-41e6-b3ce-d8c0c43c0433)
+
+### gif демонстрация перемещения и удаления файла
+![demo1](https://github.com/user-attachments/assets/c6fddcfe-5eaa-455c-b201-1eb03234d180)
+![demo2](https://github.com/user-attachments/assets/9b7cba90-42a9-4bfd-8b4f-d0c486604eb5)
 
 ---
 
